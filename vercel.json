@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "functions": {
+    "api/payhero/initiate.ts": {
+      "runtime": "@vercel/node@5"
+    },
+    "api/payhero/status.ts": {
+      "runtime": "@vercel/node@5"
+    },
+    "api/stk-push.ts": {
+      "runtime": "@vercel/node@5"
+    },
+    "api/payment-status.ts": {
+      "runtime": "@vercel/node@5"
+    }
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": ".output/public",
+  "installCommand": "npm install --legacy-peer-deps",
+  "rewrites": [
+    { "source": "/api/payhero/initiate", "destination": "/api/payhero/initiate" },
+    { "source": "/api/payhero/status",   "destination": "/api/payhero/status" },
+    { "source": "/api/stk-push",         "destination": "/api/stk-push" },
+    { "source": "/api/payment-status",   "destination": "/api/payment-status" },
+    { "source": "/(.*)",                 "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    }
+  ]
+}
