@@ -27,7 +27,9 @@ export const Route = createFileRoute("/")(
 type View = "login" | "dashboard" | "checkout" | "success";
 type Method = "card" | "mpesa" | null;
 
-const RENEWAL_AMOUNT_KSH = 10; // Test amount
+const RENEWAL_AMOUNT_USD = 50;
+const EXCHANGE_RATE = 129.2;
+const RENEWAL_AMOUNT_KSH = Math.round(RENEWAL_AMOUNT_USD * EXCHANGE_RATE); // 6,460 KSh
 
 function Brand({ light = false }: { light?: boolean }) {
   return <div className={`flex items-center gap-3 ${light ? "text-primary-foreground" : "text-foreground"}`}>
@@ -95,7 +97,7 @@ function Dashboard({ showAlert, isPaid, closeAlert, renew }: { showAlert:boolean
   return <div className="mx-auto max-w-6xl animate-soft-in">
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4"><div><p className="text-sm font-semibold text-primary">Friday, 2 October</p><h1 className="mt-1 font-display text-3xl font-semibold">Good morning, Commander.</h1><p className="mt-1 text-sm text-muted-foreground">Here's the status of your domain fleet.</p></div><Button variant="outline"><Search /> Find a new domain</Button></div>
     {isPaid && <div className="relative mb-7 overflow-hidden rounded-md border border-success/25 bg-success/8 p-5 shadow-sm"><div className="flex gap-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-success text-primary-foreground"><CheckCircle2 /></span><div><p className="font-display text-lg font-semibold text-success">Domain successfully renewed</p><p className="mt-1 text-sm leading-6 text-muted-foreground"><b className="text-foreground">thewayglobalministries.org</b> is now active. Your website and email services have been restored.</p></div></div></div>}
-    {showAlert && !isPaid && <div className="relative mb-7 overflow-hidden rounded-md border border-destructive/25 bg-destructive/8 p-5 shadow-sm"><div className="flex gap-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-destructive text-destructive-foreground"><AlertTriangle /></span><div className="pr-8"><p className="font-display text-lg font-semibold text-destructive">Your domain has expired</p><p className="mt-1 text-sm leading-6 text-muted-foreground"><b className="text-foreground">thewayglobalministries.org</b> is currently offline. Kindly renew now to restore your website and email.</p><Button variant="destructive" className="mt-4" onClick={renew}>Renew for KSh {RENEWAL_AMOUNT_KSH} <ArrowRight /></Button></div></div><Button variant="ghost" size="icon" onClick={closeAlert} className="absolute right-3 top-3" aria-label="Dismiss alert"><X /></Button></div>}
+    {showAlert && !isPaid && <div className="relative mb-7 overflow-hidden rounded-md border border-destructive/25 bg-destructive/8 p-5 shadow-sm"><div className="flex gap-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-destructive text-destructive-foreground"><AlertTriangle /></span><div className="pr-8"><p className="font-display text-lg font-semibold text-destructive">Your domain has expired</p><p className="mt-1 text-sm leading-6 text-muted-foreground"><b className="text-foreground">thewayglobalministries.org</b> is currently offline. Kindly renew now to restore your website and email.</p><Button variant="destructive" className="mt-4" onClick={renew}>Renew for ${RENEWAL_AMOUNT_USD} <ArrowRight /></Button></div></div><Button variant="ghost" size="icon" onClick={closeAlert} className="absolute right-3 top-3" aria-label="Dismiss alert"><X /></Button></div>}
     <div className="mb-7 grid gap-4 sm:grid-cols-3"><Stat label="Total domains" value="01" note="In your fleet" icon={Globe2}/><Stat label="Needs attention" value={isPaid ? "00" : "01"} note={isPaid ? "All systems go" : "Action required"} icon={isPaid ? ShieldCheck : AlertTriangle} danger={!isPaid}/><Stat label="Protection" value="On" note="Account secured" icon={ShieldCheck}/></div>
     <section><div className="mb-3 flex items-center justify-between"><h2 className="font-display text-xl font-semibold">Your domains</h2><Button variant="ghost" size="sm">View all <ArrowRight /></Button></div><div className="overflow-hidden rounded-md border bg-panel shadow-sm"><div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center"><span className="grid size-12 shrink-0 place-items-center rounded-md bg-primary/10 text-primary"><Globe2 /></span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate font-display text-lg font-semibold">thewayglobalministries.org</h3>{isPaid ? <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2.5 py-1 text-xs font-bold text-success"><span className="size-1.5 rounded-full bg-success" /> ACTIVE</span> : <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-2.5 py-1 text-xs font-bold text-destructive"><span className="size-1.5 rounded-full bg-destructive" /> EXPIRED</span>}</div><p className="mt-1 text-sm text-muted-foreground">{isPaid ? "Active · Renewed 2 October 2026 · Expires 2 December 2027" : "Expired 1 October 2026 · Website and email paused"}</p></div><div className="flex gap-2"><Button variant="outline" size="icon" aria-label="Visit domain"><ExternalLink /></Button>{!isPaid && <Button onClick={renew}>Renew now <ArrowRight /></Button>}<Button variant="ghost" size="icon" aria-label="More options"><MoreHorizontal /></Button></div></div><div className="grid border-t bg-muted/30 sm:grid-cols-3"><DomainInfo label="Auto-renew" value={isPaid ? "On" : "Off"} good={isPaid}/><DomainInfo label="Registration" value="SpaceshipDomains"/><DomainInfo label="Privacy shield" value="Protected" good/></div></div></section>
   </div>;
@@ -173,10 +175,10 @@ function Checkout({ back, success }: { back:()=>void; success:()=>void }) {
         {method==="mpesa" && <div className="mt-5 animate-soft-in rounded-md border bg-background p-5">
           <div className="mb-5 flex items-center justify-between border-b pb-4">
             <div>
-              <p className="text-xs font-bold uppercase text-muted-foreground">Amount due</p>
-              <p className="font-display text-2xl font-semibold">KSh {RENEWAL_AMOUNT_KSH}</p>
+              <p className="text-xs font-bold uppercase text-muted-foreground">Converted total</p>
+              <p className="font-display text-2xl font-semibold">KSh {RENEWAL_AMOUNT_KSH.toLocaleString()}</p>
             </div>
-            <span className="rounded-full bg-success/10 px-3 py-1.5 text-xs font-bold text-success">M-PESA</span>
+            <span className="rounded-full bg-success/10 px-3 py-1.5 text-xs font-bold text-success">${RENEWAL_AMOUNT_USD} USD</span>
           </div>
 
           {payState === "idle" || payState === "failed" ? (<>
@@ -186,7 +188,7 @@ function Checkout({ back, success }: { back:()=>void; success:()=>void }) {
             <p className="mt-2 text-xs text-muted-foreground">An M-Pesa STK push prompt will be sent to this number.</p>
             {errorMsg && <div className="mt-3 flex items-start gap-2 rounded-md border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive"><AlertTriangle className="mt-0.5 size-4 shrink-0"/><span>{errorMsg}</span></div>}
             <Button variant="hero" className="mt-5 h-12 w-full" disabled={phone.replace(/\D/g,"").length<9} onClick={pay}>
-              Pay KSh {RENEWAL_AMOUNT_KSH} via M-Pesa <ArrowRight/>
+              Pay KSh {RENEWAL_AMOUNT_KSH.toLocaleString()} via M-Pesa <ArrowRight/>
             </Button>
           </>) : payState === "sending" ? (
             <div className="flex flex-col items-center gap-4 py-8 text-center">
@@ -219,7 +221,8 @@ function Checkout({ back, success }: { back:()=>void; success:()=>void }) {
           <div className="flex justify-between text-primary-foreground/65"><span>ICANN fee</span><b className="text-primary-foreground">Included</b></div>
         </div>
         <div className="my-5 border-t border-primary-foreground/15"/>
-        <div className="flex items-end justify-between"><span className="font-semibold">Total</span><span className="font-display text-3xl font-semibold">KSh {RENEWAL_AMOUNT_KSH}</span></div>
+        <div className="flex items-end justify-between"><span className="font-semibold">Total</span><span className="font-display text-3xl font-semibold">${RENEWAL_AMOUNT_USD}</span></div>
+        <div className="mt-1 flex justify-between text-xs text-primary-foreground/60"><span>M-Pesa equivalent</span><span>KSh {RENEWAL_AMOUNT_KSH.toLocaleString()}</span></div>
         <div className="mt-5 flex items-center gap-2 text-xs text-primary-foreground/55"><LockKeyhole className="size-3.5"/> Secured via M-Pesa · PayHero</div>
       </aside>
     </div>
