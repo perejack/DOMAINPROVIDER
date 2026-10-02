@@ -1,19 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "api/payhero/initiate.ts": {
-      "runtime": "@vercel/node@5"
-    },
-    "api/payhero/status.ts": {
-      "runtime": "@vercel/node@5"
-    },
-    "api/stk-push.ts": {
-      "runtime": "@vercel/node@5"
-    },
-    "api/payment-status.ts": {
-      "runtime": "@vercel/node@5"
-    }
-  },
   "buildCommand": "npm run build",
   "outputDirectory": ".output/public",
   "installCommand": "npm install --legacy-peer-deps",
@@ -22,7 +8,7 @@
     { "source": "/api/payhero/status",   "destination": "/api/payhero/status" },
     { "source": "/api/stk-push",         "destination": "/api/stk-push" },
     { "source": "/api/payment-status",   "destination": "/api/payment-status" },
-    { "source": "/(.*)",                 "destination": "/" }
+    { "source": "/((?!api/).*)",         "destination": "/" }
   ],
   "headers": [
     {
