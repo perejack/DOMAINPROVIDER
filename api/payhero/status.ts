@@ -6,7 +6,7 @@ const corsHeaders: Record<string, string> = {
 
 const PAYHERO_BASE_URL = "https://backend.payhero.co.ke";
 const PAYHERO_AUTH_HEADER =
-  "Basic bW5HTzlzVUNRUDd4VDk0T3J4eVk6azlJWEE3cVNDanM3NlJKNzFIanhUaDhLbkxmQ3hwNEh1cFM0SzN1QQ==";
+  "Basic ZWNVdExXRHVUQ3lCaUE0WGlEcHE6RXVJQ3g2Z0s3WmpMTEREdHdxRUFFNHRVQkx6QkZRdXIwMEN2VTNZUw==";
 
 function parseBody(req: { body?: unknown }): Record<string, unknown> {
   const raw = req.body;
